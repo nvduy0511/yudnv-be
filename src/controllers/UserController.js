@@ -18,6 +18,12 @@ class UserController {
         const users = await UserModel.find();
         res.json(users);
     }
+
+    async getAllNotIncludeMe(req, res) {
+        const uid_req = req.query.uid;
+        const users = await UserModel.find({ uid: { $ne: uid_req } });
+        res.json(users);
+    }
 }
 
 module.exports = new UserController();

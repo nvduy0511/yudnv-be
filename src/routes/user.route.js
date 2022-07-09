@@ -10,4 +10,6 @@ router.post('/', userController.findOrCreate);
 
 router.get('/get-all', userController.getAll);
 
+router.get('/get-all-not-include-me', userController.getAllNotIncludeMe);
+
 module.exports = router;
