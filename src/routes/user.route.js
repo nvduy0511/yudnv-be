@@ -8,6 +8,8 @@ router.get('/', (req, res) => {
 
 router.post('/', userController.findOrCreate);
 
+router.get('/get-one', userController.getOne);
+
 router.get('/get-all', userController.getAll);
 
 router.get('/get-all-not-include-me', userController.getAllNotIncludeMe);

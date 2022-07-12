@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const conversationController = require('../controllers/ConversationController');
 
-router.get('/create', conversationController.create);
+router.post('/access', conversationController.accessConversation);
 
 router.get('/get-all', conversationController.getAll);
 
