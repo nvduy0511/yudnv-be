@@ -1,21 +1,27 @@
 const MessageModel = require('../models/MessageModel');
 
 class MessageController {
-    index(req, res) {
-        res.send('OK message');
-    }
-    send(req, res) {
-        res.send('Send message');
-    }
-    create(req, res) {
-        const mess = new MessageModel({
-            conver_id: 1,
-            content: 'aloalo',
-            author: 1,
+    async send(req, res) {
+        const { idConversation, content, _idSender } = req.body;
+        //save do database
+        const newMessage = new MessageModel({
+            sender: _idSender,
+            content: content,
+            conversation: idConversation,
+            readBy: [_idSender],
         });
-        mess.save();
-        res.json(mess);
+        await newMessage.save();
+        //update lastest message in Convestation
+        //...
+        return res.json(newMessage);
     }
+
+    async getAllMessageByIdConversation(req, res) {
+        const idConversation = req.query.id;
+        const messages = await MessageModel.find({ conversation: { $eq: idConversation } });
+        res.json(messages);
+    }
+
     async getAll(req, res) {
         const messages = await MessageModel.find();
         res.json(messages);

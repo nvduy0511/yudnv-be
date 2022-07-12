@@ -2,13 +2,13 @@ const ConversationModel = require('../models/ConversationModel');
 
 class ConversationController {
     async accessConversation(req, res) {
-        const { uid_receiver, uid_send } = req.body;
-        console.log(uid_receiver, uid_send);
-        if (!uid_receiver || !uid_send) return res.sendStatus(400);
+        const { id_receiver, id_send } = req.body;
+        console.log(id_receiver, id_send);
+        if (!id_receiver || !id_send) return res.sendStatus(400);
 
         const conversation = await ConversationModel.findOne({
             isGroupChat: false,
-            $and: [{ users: { $elemMatch: { $eq: uid_receiver } } }, { users: { $elemMatch: { $eq: uid_send } } }],
+            $and: [{ users: { $elemMatch: { $eq: id_receiver } } }, { users: { $elemMatch: { $eq: id_send } } }],
         })
             .populate('users')
             .populate('latestMessage');
@@ -18,7 +18,7 @@ class ConversationController {
             var chatData = {
                 chatName: '1-1',
                 isGroupChat: false,
-                users: [uid_receiver, uid_send],
+                users: [id_receiver, id_send],
             };
             try {
                 const createdChat = await ConversationModel.create(chatData);
