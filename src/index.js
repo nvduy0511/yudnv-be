@@ -24,21 +24,17 @@ const socketIo = require('socket.io')(server, {
 
 socketIo.on('connection', (socket) => {
     console.log('New client connected' + socket.id);
-    socket.on('joinRoom', (data) => {
-        console.log('join room', data);
-        socket.join(data);
+    socket.on('joinRoom', (room) => {
+        console.log('join room', room);
+        if (room) socket.join(room);
+    });
+    socket.on('leaveRoom', (room) => {
+        console.log('leave room', room);
+        if (room) socket.leave(room);
     });
     socket.on('sendMessage', (data) => {
-        console.log('requestSendMessage: ', data);
-        socketIo.to(data.idRoom).emit('message', data);
+        socketIo.in(data.conversation).emit('message', data);
     });
-
-    // socket.emit('getId', socket.id);
-
-    // socket.on('sendDataClient', function (data) {
-    //     console.log(data);
-    //     socketIo.emit('sendDataServer', { data });
-    // });
 
     socket.on('disconnect', () => {
         console.log('Client disconnected');

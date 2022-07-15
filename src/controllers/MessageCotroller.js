@@ -1,18 +1,18 @@
+const ConversationModel = require('../models/ConversationModel');
 const MessageModel = require('../models/MessageModel');
 
 class MessageController {
     async send(req, res) {
-        const { idConversation, content, _idSender } = req.body;
+        const { conversation, content, sender } = req.body;
         //save do database
         const newMessage = new MessageModel({
-            sender: _idSender,
+            sender: sender,
             content: content,
-            conversation: idConversation,
-            readBy: [_idSender],
+            conversation: conversation,
+            readBy: [sender],
         });
         await newMessage.save();
-        //update lastest message in Convestation
-        //...
+        await ConversationModel.findByIdAndUpdate(conversation, { latestMessage: content });
         return res.json(newMessage);
     }
 

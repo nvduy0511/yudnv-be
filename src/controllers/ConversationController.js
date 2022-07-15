@@ -32,6 +32,13 @@ class ConversationController {
 
         res.status(400);
     }
+    async getAllByIdUser(req, res) {
+        console.log(req.query.id);
+        const convers = await ConversationModel.find({ users: { $elemMatch: { $eq: req.query.id } } })
+            .populate('users')
+            .populate('latestMessage');
+        res.json(convers);
+    }
 
     async getAll(req, res) {
         const convers = await ConversationModel.find();
