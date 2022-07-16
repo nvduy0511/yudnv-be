@@ -36,6 +36,13 @@ socketIo.on('connection', (socket) => {
         socketIo.in(data.conversation).emit('message', data);
     });
 
+    socket.on('onTyping', (conversation) => {
+        socket.in(conversation).emit('onTyping');
+    });
+    socket.on('offTyping', (conversation) => {
+        socket.in(conversation).emit('offTyping');
+    });
+
     socket.on('disconnect', () => {
         console.log('Client disconnected');
     });
