@@ -5,14 +5,13 @@ class MessageController {
     async send(req, res) {
         const { conversation, content, sender } = req.body;
         //save do database
+        await ConversationModel.findByIdAndUpdate(conversation, { latestMessage: content, readBy: [sender] });
         const newMessage = new MessageModel({
             sender: sender,
             content: content,
             conversation: conversation,
-            readBy: [sender],
         });
         await newMessage.save();
-        await ConversationModel.findByIdAndUpdate(conversation, { latestMessage: content });
         return res.json(newMessage);
     }
 
@@ -25,6 +24,11 @@ class MessageController {
     async getAll(req, res) {
         const messages = await MessageModel.find();
         res.json(messages);
+    }
+
+    async deleteAll(req, res) {
+        await MessageModel.deleteMany();
+        res.send('Delete Success!');
     }
 }
 

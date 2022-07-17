@@ -32,6 +32,21 @@ class ConversationController {
 
         res.status(400);
     }
+
+    async readMessage(req, res) {
+        const { idConversation, idUser } = req.body;
+        const userIsRead = await ConversationModel.findOne({
+            $and: [{ readBy: { $elemMatch: { $eq: idUser } } }, { _id: { $eq: idConversation } }],
+        });
+
+        if (!userIsRead) {
+            await ConversationModel.findByIdAndUpdate(idConversation, { $push: { readBy: idUser } });
+            res.status(200).json({ isUpdate: true });
+            console.log('READ MESSAGE-UPDATE', idConversation, ' ', idUser);
+        }
+        res.status(200).json({ isUpdate: false });
+    }
+
     async getAllByIdUser(req, res) {
         console.log(req.query.id);
         const convers = await ConversationModel.find({ users: { $elemMatch: { $eq: req.query.id } } })
@@ -43,6 +58,11 @@ class ConversationController {
     async getAll(req, res) {
         const convers = await ConversationModel.find();
         res.json(convers);
+    }
+
+    async deleteAll(req, res) {
+        await ConversationModel.deleteMany();
+        res.send('Delete Success!');
     }
 }
 

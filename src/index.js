@@ -23,17 +23,21 @@ const socketIo = require('socket.io')(server, {
 });
 
 socketIo.on('connection', (socket) => {
-    console.log('New client connected' + socket.id);
+    // console.log('New client connected' + socket.id);
     socket.on('joinRoom', (room) => {
-        console.log('join room', room);
+        // console.log('join room', room);
         if (room) socket.join(room);
     });
     socket.on('leaveRoom', (room) => {
-        console.log('leave room', room);
+        // console.log('leave room', room);
         if (room) socket.leave(room);
     });
     socket.on('sendMessage', (data) => {
-        socketIo.in(data.conversation).emit('message', data);
+        const { members, ...dataToClient } = data;
+        socketIo.in(data.conversation).emit('message', dataToClient);
+        members.forEach((item) => {
+            socket.in(item).emit('notify', dataToClient);
+        });
     });
 
     socket.on('onTyping', (conversation) => {
@@ -44,7 +48,7 @@ socketIo.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log('Client disconnected');
+        // console.log('Client disconnected');
     });
 });
 

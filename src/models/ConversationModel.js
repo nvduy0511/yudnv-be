@@ -7,6 +7,7 @@ const schema = new mongoose.Schema(
         users: [{ type: String, ref: 'User' }],
         latestMessage: { type: String, default: '' },
         groupAdmin: { type: String, ref: 'User' },
+        readBy: [{ type: String, ref: 'User' }],
     },
     { timestamps: true },
 );
