@@ -4,7 +4,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const routerApi = require('./routes');
 const mongodb = require('./configs/mongodb.config');
-const port = 3001;
+import dotenv from 'dotenv';
+dotenv.config();
+const port = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -23,13 +25,11 @@ const socketIo = require('socket.io')(server, {
 });
 
 socketIo.on('connection', (socket) => {
-    // console.log('New client connected' + socket.id);
+    console.log('New client connected' + socket.id);
     socket.on('joinRoom', (room) => {
-        // console.log('join room', room);
         if (room) socket.join(room);
     });
     socket.on('leaveRoom', (room) => {
-        // console.log('leave room', room);
         if (room) socket.leave(room);
     });
     socket.on('sendMessage', (data) => {
@@ -48,7 +48,7 @@ socketIo.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        // console.log('Client disconnected');
+        console.log('Client disconnected');
     });
 });
 

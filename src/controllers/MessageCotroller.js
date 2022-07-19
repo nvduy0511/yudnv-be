@@ -17,8 +17,19 @@ class MessageController {
 
     async getAllMessageByIdConversation(req, res) {
         const idConversation = req.query.id;
-        const messages = await MessageModel.find({ conversation: { $eq: idConversation } });
-        res.json(messages);
+        const limit = req.query.limit;
+        const page = req.query.page;
+
+        try {
+            const messages = await MessageModel.find({ conversation: { $eq: idConversation } })
+                .sort({ createdAt: -1 })
+                .skip((page - 1) * limit)
+                .limit(limit);
+            res.json(messages);
+        } catch (error) {
+            res.json({ status: false });
+            return;
+        }
     }
 
     async getAll(req, res) {

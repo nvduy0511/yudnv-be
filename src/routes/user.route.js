@@ -7,6 +7,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', userController.findOrCreate);
+router.post('/change-name', userController.changeName);
 
 router.get('/get-one', userController.getOne);
 

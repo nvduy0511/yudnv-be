@@ -3,8 +3,7 @@ const ConversationModel = require('../models/ConversationModel');
 class ConversationController {
     async accessConversation(req, res) {
         const { id_receiver, id_send } = req.body;
-        console.log(id_receiver, id_send);
-        if (!id_receiver || !id_send) return res.sendStatus(400);
+        if (!id_receiver || !id_send) return res.json({ status: false });
 
         const conversation = await ConversationModel.findOne({
             isGroupChat: false,
@@ -13,7 +12,7 @@ class ConversationController {
             .populate('users')
             .populate('latestMessage');
         if (conversation) {
-            res.status(200).json(conversation);
+            res.json(conversation);
         } else {
             var chatData = {
                 chatName: '1-1',
@@ -23,7 +22,7 @@ class ConversationController {
             try {
                 const createdChat = await ConversationModel.create(chatData);
                 const fullChat = await ConversationModel.findOne({ _id: createdChat._id }).populate('users');
-                res.status(200).json(fullChat);
+                res.json(fullChat);
             } catch (error) {
                 res.status(400);
                 throw new Error(error.message);
@@ -41,14 +40,13 @@ class ConversationController {
 
         if (!userIsRead) {
             await ConversationModel.findByIdAndUpdate(idConversation, { $push: { readBy: idUser } });
-            res.status(200).json({ isUpdate: true });
-            console.log('READ MESSAGE-UPDATE', idConversation, ' ', idUser);
+            res.json({ isUpdate: true });
+            return;
         }
-        res.status(200).json({ isUpdate: false });
+        res.json({ isUpdate: false });
     }
 
     async getAllByIdUser(req, res) {
-        console.log(req.query.id);
         const convers = await ConversationModel.find({ users: { $elemMatch: { $eq: req.query.id } } })
             .populate('users')
             .populate('latestMessage');

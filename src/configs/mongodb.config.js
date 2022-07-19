@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const URI = 'mongodb+srv://nvduy:duy123@chatapp.wylpz.mongodb.net/?retryWrites=true&w=majority';
+import dotenv from 'dotenv';
+dotenv.config();
+const URI = process.env.MONGODB_URI;
 
 const config = async () => {
     let isConnect = false;

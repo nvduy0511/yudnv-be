@@ -10,7 +10,7 @@ class UserController {
                 await user.save();
                 res.json({ isCreate: true, user: user });
             } catch (error) {
-                res.status(400);
+                res.json({ status: false });
             }
         } else {
             res.json({ isCreate: false, user: user_exist });
@@ -31,6 +31,16 @@ class UserController {
         const _id_req = req.query._id;
         const users = await UserModel.find({ _id: { $ne: _id_req } });
         res.json(users);
+    }
+
+    async changeName(req, res) {
+        const { _id, displayName } = req.body;
+        try {
+            await UserModel.findByIdAndUpdate(_id, { displayName: displayName });
+            res.json({ status: true });
+        } catch (error) {
+            res.json({ status: false });
+        }
     }
 }
 
