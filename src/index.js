@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const routerApi = require('./routes');
 const mongodb = require('./configs/mongodb.config');
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 dotenv.config();
 const port = process.env.PORT || 3001;
 
