@@ -45,13 +45,17 @@ socketIo.on('connection', (socket) => {
     });
 });
 
-mongodb
-    .config()
-    .then(() => {
-        server.listen(port, () => {
-            console.log(`App listening on port ${port}`);
-        });
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+server.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+});
+
+// mongodb
+//     .config()
+//     .then(() => {
+//         server.listen(port, () => {
+//             console.log(`App listening on port ${port}`);
+//         });
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     });
